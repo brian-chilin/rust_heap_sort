@@ -1,13 +1,13 @@
 use rand::Rng;
 use std::collections::HashSet;
-use std::io::{self, Write};
+use std::io::{Write};
 
 // https://doc.rust-lang.org/rust-by-example/std/hash/hashset.html
 
 fn main() {
     let mut rng = rand::thread_rng();
 
-    let mut heap: [u8; 31] = [0; 31];
+    let mut array: [u8; 31] = [0; 31];
     let mut used_nums = HashSet::new();
 
     for i in 0..31 {
@@ -17,19 +17,19 @@ fn main() {
             n = rng.gen_range(10..=99);
         }
         used_nums.insert(n);
-        heap[i] = n;
+        array[i] = n;
     }
 
-    display_tree(&mut heap);
-    //print!("{:?}", heap);
+    display_tree(&array);
+    //print!("{:?}", array);
 
     print!("Enter to continue");
     std::io::stdout().flush().unwrap();
-    let mut input = String::new();
+    //let mut input = String::new();
     //std::io::stdin().read_line(&mut input).unwrap();
     //print!("{}", input);
 
-    build_max_heap(&heap)
+    heapsort(&mut array);
 }
 
 fn display_tree(heap: &[u8; 31]) {
@@ -47,17 +47,39 @@ fn display_tree(heap: &[u8; 31]) {
              heap[16], heap[17], heap[18], heap[19], heap[20], heap[21], heap[22], heap[23], heap[24], heap[25], heap[26], heap[27], heap[28], heap[29], heap[30]);
 }
 
-fn build_max_heap(array: &[u8]) {
-    //this among other heap functions i copy from
-    //Introduction to Algorithms 3ed by Thomas H. Cormen
-    //i studied and learned these last semester in CECS328
-    for i in 0..(array.len()/2) {
-        max_heapify(&array, i);
+fn heapsort(array: &mut [u8; 31]) {
+    build_min_heap(array);
+    display_tree(array);
+
+    for i in 0..31 {
+        println!("{}", i);
     }
 }
 
-fn max_heapify(array: &[u8], index: usize) {
-    left_i  = (index * 2) + 2;
-    right_i = (index * 2) + 1;
+fn build_min_heap(array: &mut [u8]) {
+    //this among other heap functions i copy from
+    //Introduction to Algorithms 3ed by Thomas H. Cormen
+    //i studied and learned these well last semester in CECS328
+    for i in (0..(array.len()/2)).rev() {
+        min_heapify(array, i);
+    }
+}
 
+fn min_heapify(array: &mut [u8], index: usize) {
+    let left_i  = (index * 2) + 2;
+    let right_i = (index * 2) + 1;
+
+    let mut smallest = index;
+    if left_i < array.len() && array[left_i] < array[smallest] {
+        smallest = left_i;
+    }
+    if right_i < array.len() && array[right_i] < array[smallest] {
+        smallest = right_i
+    }
+    if smallest != index {
+        let temp = array[index];
+        array[index] = array[smallest];
+        array[smallest] = temp;
+        min_heapify(array, smallest)
+    }
 }
