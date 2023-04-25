@@ -57,7 +57,7 @@ fn heapsort(array: &mut [u8; 31]) {
     print!("\nAs a max-heap: ");
     display_tree(array);
 
-    for i in 0..30 {
+    for i in 0..31 {
         let temp = array[0];
         array[0] = array[30-i];
         array[30-i] = temp;
